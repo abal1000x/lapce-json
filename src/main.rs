@@ -58,8 +58,8 @@ fn initialize(params: InitializeParams) -> anyhow::Result<()> {
         None => PLUGIN_RPC.window_show_message(
             MessageType::ERROR,
             format!(r#"
-                Please configure the vscode-json-language-server path in the config first.
-                If its not installed yet, install by `npm install -g vscode-html-languageserver-bin`.
+Please configure the `vscode-json-language-server` path in the config first.
+If its not installed yet, install by `npm install -g vscode-html-languageserver-bin`.
             "#),
         )?,
     }
