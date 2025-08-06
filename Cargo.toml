@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.59"
+lapce-plugin = { git = "https://github.com/abal1000x/lapce-plugin-rust", rev = "f18814b786ce235e860d2d667fc36bd8a4a6f838" }
+anyhow = "1.0.98"
+
+[patch.crates-io]
+psp-types = { git = "https://github.com/abal1000x/psp-types", rev = "d4b32a894709e35fd95319a479231277c5b2c916" }

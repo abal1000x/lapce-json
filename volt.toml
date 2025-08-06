@@ -1,0 +1,16 @@
+name = "lapce-biome"
+version = "0.1.0"
+author = "abal1000x"
+display-name = "Biome"
+description = "Formatter for JavaScript."
+wasm = "lapce-biome.wasm"
+icon = "logo.png"
+repository = "https://github.com/abal1000x/lapce-biome"
+
+[activation]
+language = ["javascript", "typescript"]
+workspace-contains = ["*/Cargo.toml"]
+
+[config."serverPath"]
+default = ""
+description = "Path to biome executable. When empty, it points to the bundled binary."
