@@ -1,5 +1,5 @@
 [package]
-name = "lapce-biome"
+name = "lapce-json"
 version = "0.1.0"
 edition = "2024"
 

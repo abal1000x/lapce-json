@@ -1,15 +1,14 @@
-name = "lapce-biome"
+name = "lapce-json"
 version = "0.1.0"
 author = "abal1000x"
-display-name = "Biome"
-description = "Formatter for JavaScript."
-wasm = "lapce-biome.wasm"
-icon = "logo.png"
-repository = "https://github.com/abal1000x/lapce-biome"
+display-name = "Json"
+description = "Formatter for JSON."
+wasm = "lapce-json.wasm"
+icon = "logo.svg"
+repository = "https://github.com/abal1000x/lapce-json"
 
 [activation]
-language = ["javascript", "typescript"]
-workspace-contains = ["*/Cargo.toml"]
+language = ["json"]
 
 [config."serverPath"]
 default = ""
