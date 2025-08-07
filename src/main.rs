@@ -14,7 +14,7 @@ impl LapcePlugin for State {
             Initialize::METHOD => {
                 let params: InitializeParams = serde_json::from_value(params).unwrap();
                 if let Err(e) = initialize(params) {
-                    PLUGIN_RPC.stderr(&format!("Lapce Json initialize error: {e}"))
+                    PLUGIN_RPC.stderr(&format!("Lapce Json: Initialize error: {e}"))
                 }
             }
             _ => {}
@@ -32,8 +32,29 @@ fn initialize(params: InitializeParams) -> anyhow::Result<()> {
         .and_then(|e| e.get("serverPath"))
         .and_then(|e| e.as_str())
         .filter(|e| !e.is_empty());
+    if server_path.is_none() {
+        PLUGIN_RPC.window_show_message(
+            MessageType::ERROR,
+            format!(
+                r#"Lapce Json:
+Please configure the `vscode-json-language-server` path correctly in the config first.
+If its not installed yet, install by `npm install -g vscode-html-languageserver-bin`."#
+            ),
+        )?;
+        return Ok(());
+    }
+    let server_path = server_path.unwrap();
 
-    let server_uri = server_path.and_then(|e| Uri::from_str(&format!("urn:{e}")).ok());
+    let server_uri = Uri::from_str(&format!("urn:{server_path}")).ok();
+    if server_uri.is_none() {
+        PLUGIN_RPC.window_show_message(
+            MessageType::ERROR,
+            format!("Lapce Json: The configured path of `{server_path}` are invalid."),
+        )?;
+        return Ok(());
+    }
+    let server_uri = server_uri.unwrap();
+
     let server_args = vec!["--stdio".to_string()];
     let document_selector = vec![DocumentFilter {
         language: Some("json".to_string()),
@@ -41,27 +62,15 @@ fn initialize(params: InitializeParams) -> anyhow::Result<()> {
         pattern: None,
     }];
 
-    match server_uri {
-        Some(server_uri) => {
-            let mut opts = params.initialization_options.unwrap_or_default();
-            if let Some(obj) = opts.as_object_mut() {
-                use serde_json::Value::Bool;
-                obj.insert("provideFormatter".to_string(), Bool(true));
-            }
+    let mut opts = params.initialization_options.unwrap_or_default();
+    if let Some(obj) = opts.as_object_mut() {
+        use serde_json::Value::Bool;
+        obj.insert("provideFormatter".to_string(), Bool(true));
+    }
 
-            let result =
-                PLUGIN_RPC.start_lsp(server_uri, server_args, document_selector, Some(opts));
-            if result.is_err() {
-                PLUGIN_RPC.stderr(&format!("Lapce Json Failed to start lsp: {result:?}"));
-            }
-        }
-        None => PLUGIN_RPC.window_show_message(
-            MessageType::ERROR,
-            format!(r#"
-Please configure the `vscode-json-language-server` path in the config first.
-If its not installed yet, install by `npm install -g vscode-html-languageserver-bin`.
-            "#),
-        )?,
+    let result = PLUGIN_RPC.start_lsp(server_uri, server_args, document_selector, Some(opts));
+    if result.is_err() {
+        PLUGIN_RPC.stderr(&format!("Lapce Json: Failed to start lsp: {result:?}"));
     }
 
     Ok(())
