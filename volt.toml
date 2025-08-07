@@ -1,5 +1,5 @@
 name = "lapce-json"
-version = "0.1.0"
+version = "0.1.1"
 author = "abal1000x"
 display-name = "Json"
 description = "Formatter for JSON."
