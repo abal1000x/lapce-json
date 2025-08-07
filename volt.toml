@@ -12,4 +12,4 @@ language = ["json"]
 
 [config."serverPath"]
 default = ""
-description = "Path to biome executable. When empty, it points to the bundled binary."
+description = "Path to `vscode-json-language-server` executable. Install by `npm install -g vscode-html-languageserver-bin`."
